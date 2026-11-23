@@ -9,6 +9,12 @@
 <meta name="robots" content="index, follow">
 <meta name="google-site-verification" content="KGiqwg7ZrAjombyGZYatg-oZl6V_uX5hmSZ1uHfCok4" />
 <link rel="canonical" href="https://min-ship-it12.github.io/hoerang/">
+<link rel="alternate" hreflang="ko" href="https://min-ship-it12.github.io/hoerang/">
+<link rel="alternate" hreflang="en" href="https://min-ship-it12.github.io/hoerang/en/">
+<link rel="alternate" hreflang="x-default" href="https://min-ship-it12.github.io/hoerang/">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<script>(function(){try{if(/bot|crawl|spider|slurp|yeti|lighthouse|headless|preview/i.test(navigator.userAgent))return;var s=localStorage.getItem('rain-lang');if(s==='en'||(!s&&!/^ko\b/i.test(navigator.language||'ko')))location.replace('en/'+location.search+location.hash);}catch(e){}})();</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="회랑">
 <meta property="og:title" content="회랑 · 비 오는 흰 성당 폐허 도트 홈페이지">
@@ -57,13 +63,19 @@ body.zen .panel *{pointer-events:none}
 @media (max-width:640px){.glass{gap:6px;padding:7px;max-width:100%}.glass>*{flex:none}.lbl{display:none}button{font-size:12px;padding:6px 7px}.brand{max-width:64%;padding:4px 8px 5px}.brand p{white-space:nowrap}.brand h1{font-size:17px}.brand p{font-size:10px}.hint{display:none}}
 @media (min-width:900px) and (min-aspect-ratio:1/1){.panel{left:auto;right:max(20px,env(safe-area-inset-right,0px));justify-content:flex-end}.glass{flex-direction:column;align-items:stretch;gap:10px;width:200px;padding:12px}.grp{flex-direction:column;align-items:flex-start;gap:4px}.hint{max-width:176px;line-height:1.45}}
 @media (prefers-reduced-motion:reduce){.panel,.brand,.toast{transition:none}}
+
+.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.langs{pointer-events:auto;display:inline-flex;font-family:"Silkscreen",monospace;font-size:10px;letter-spacing:.08em;line-height:1;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+.langs a{padding:3px 6px 2px;color:rgba(235,240,238,.75);background:rgba(10,14,16,.55);text-decoration:none;text-shadow:none}
+.langs a:hover,.langs a:focus-visible{color:#fff}
+.langs a[aria-current="true"]{background:rgba(235,240,238,.88);color:#10161a}
 </style>
 </head>
 <body>
 <canvas id="bg" width="27" height="48" aria-hidden="true"></canvas>
 <div class="vig"></div>
 <canvas id="scene" aria-label="지붕 없는 흰 고딕 성당 회랑을 들여다본 도트 장면. 가운데 물길에 아치와 구름이 비치고, 빗방울이 떨어질 때마다 물속 아치가 흔들린다. 끝 아치 너머로 바다."></canvas>
-<div class="brand"><h1>회랑</h1><p>물길에 비친 아치 위로 내리는 비</p>
+<div class="brand"><div class="hrow"><h1>회랑</h1><span class="langs" aria-label="Language"><a href="./" hreflang="ko" lang="ko" onclick="try{localStorage.setItem('rain-lang','ko')}catch(e){}" aria-current="true">KO</a><a href="en/" hreflang="en" lang="en" onclick="try{localStorage.setItem('rain-lang','en')}catch(e){}">EN</a></span></div><p>물길에 비친 아치 위로 내리는 비</p>
   <details><summary>시리즈 ▾</summary><nav aria-label="PIXEL RAIN 시리즈"><a href="https://cheoma-rain.netlify.app/" target="_blank" rel="noopener">1 처마 밑</a><a href="https://mulbineul-rain.netlify.app/" target="_blank" rel="noopener">2 물비늘</a><a href="https://changga-rain.netlify.app/" target="_blank" rel="noopener">3 창가</a><a href="https://yeonip-rain.netlify.app/" target="_blank" rel="noopener">4 연잎</a><a href="https://modakbul-rain.netlify.app/" target="_blank" rel="noopener">5 모닥불</a><a href="https://yuribyeong-rain.netlify.app/" target="_blank" rel="noopener">6 유리병</a><a href="https://deulpan-rain.netlify.app/" target="_blank" rel="noopener">7 들판</a><a href="https://min-ship-it12.github.io/deungdae/" target="_blank" rel="noopener">8 등대</a><a href="https://min-ship-it12.github.io/hoerang/" aria-current="page">9 회랑</a></nav></details></div>
 <button class="hide" id="zen" aria-pressed="false">조작 숨기기</button>
 <div class="toast" id="toast" role="status"></div>
@@ -646,7 +658,8 @@ function soundStep(dt) { const now = audio.currentTime, g = Math.pow(10, RAIN_DB
 function tone(f, at, dur, g, type = 'sine', f2, toRev = .6) { const o = audio.createOscillator(), gn = audio.createGain(); o.type = type; o.frequency.setValueAtTime(f, at); if (f2) o.frequency.exponentialRampToValueAtTime(f2, at + dur);
   gn.gain.setValueAtTime(0, at); gn.gain.linearRampToValueAtTime(g, at + .008); gn.gain.exponentialRampToValueAtTime(.0001, at + dur); o.connect(gn); gn.connect(A.out);
   const sg = audio.createGain(); sg.gain.value = toRev; gn.connect(sg); sg.connect(A.rev); o.start(at); o.stop(at + dur + .05); }
-function plop(s, y) { if (audio.state !== 'running') return; const near = clamp((y - WY) / (H - WY), 0, 1), f = 520 + R() * 500 + (1 - near) * 300;      // 물방울 퐁 (울림 속으로)
+function plop(s, y) { return;   // 2026-11-19 물방울 띵 소리 뺌
+  if (audio.state !== 'running') return; const near = clamp((y - WY) / (H - WY), 0, 1), f = 520 + R() * 500 + (1 - near) * 300;      // 물방울 퐁 (울림 속으로)
   tone(f, audio.currentTime + .01, .14, .035 * s * (.5 + near * .5), 'sine', f * 1.9); }
 function patter(n) { if (audio.state !== 'running') return; for (let k = 0; k < Math.min(16, n); k++) setTimeout(() => plop(.5 + R() * .4, WY + R() * 100), 160 + k * 40 + R() * 90); }
 function slosh() { if (audio.state !== 'running') return; const at = audio.currentTime + .01; tone(300, at, .18, .06, 'triangle', 160); tone(900, at + .03, .1, .025, 'sine', 600); }
